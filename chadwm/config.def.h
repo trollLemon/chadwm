@@ -8,9 +8,12 @@ static const unsigned int default_border = 0;   /* to switch back to default bor
 static const unsigned int snap      = 32;       /* snap pixel */
 static const unsigned int gappih    = 10;       /* horiz inner gap between windows */
 static const unsigned int gappiv    = 10;       /* vert inner gap between windows */
-static const unsigned int gappoh    = 10;       /* horiz outer gap between windows and screen edge */
-static const unsigned int gappov    = 10;       /* vert outer gap between windows and screen edge */
+static const unsigned int gappoh    = 15;       /* horiz outer gap between windows and screen edge */
+static const unsigned int gappov    = 15;       /* vert outer gap between windows and screen edge */
 static const int smartgaps          = 0;        /* 1 means no outer gap when there is only one window */
+static const int shadow_offset_x = 3;
+static const int shadow_offset_y = 10;
+static const int shadow_height = 34;
 static const unsigned int systraypinning = 0;   /* 0: sloppy systray follows selected monitor, >0: pin systray to monitor X */
 static const unsigned int systrayspacing = 2;   /* systray spacing */
 static const int systraypinningfailfirst = 1;   /* 1: if pinning fails,display systray on the 1st monitor,False: display systray on last monitor*/
@@ -40,7 +43,7 @@ static const int new_window_attach_on_end = 0; /*  1 means the new window will a
 static const char *fonts[]          = {"Iosevka:style:medium:size=12" ,"JetBrainsMono Nerd Font Mono:style:medium:size=19" };
 
 // theme
-#include "themes/onedark.h"
+#include "themes/custom.h"
 
 static const char *colors[][3]      = {
     /*                     fg       bg      border */
@@ -62,14 +65,7 @@ static const char *colors[][3]      = {
 };
 
 /* tagging */
-static char *tags[] = {"", "", "", "", ""};
-
-static const char* eww[] = { "eww", "open" , "eww", NULL };
-
-static const Launcher launchers[] = {
-    /* command     name to display */
-    { eww,         "" },
-};
+static char *tags[] = {"", "󰝤", "󰔶", "", "󰋘"};
 
 static const int tagschemes[] = {
     SchemeTag1, SchemeTag2, SchemeTag3, SchemeTag4, SchemeTag5
@@ -99,6 +95,9 @@ static const int lockfullscreen = 1; /* 1 will force focus on the fullscreen win
 
 #define FORCE_VSPLIT 1  /* nrowgrid layout: force two clients to always split vertically */
 #include "functions.h"
+static const char dmenufont[]       = "Iosevka:style:medium:size=12";
+static char dmenumon[2] = "0"; /* component of dmenucmd, manipulated in spawn() */
+static const char *dmenucmd[] = { "dmenu_run", "-m", dmenumon, "-fn", dmenufont, "-nb", black, "-nf", red, "-sb", yellow, "-sf", blue, NULL };
 
 
 static const Layout layouts[] = {
@@ -149,8 +148,8 @@ static const Key keys[] = {
     {MODKEY,                            XK_u,       spawn,
         SHCMD("maim --select | xclip -selection clipboard -t image/png")},
 
-    { MODKEY,                           XK_c,       spawn,          SHCMD("rofi -show drun") },
-    { MODKEY,                           XK_Return,  spawn,          SHCMD("st")},
+    { MODKEY,                           XK_c,       spawn,          {.v = dmenucmd } },
+    { MODKEY,                           XK_Return,  spawn,          SHCMD("sakura")},
 
     // toggle stuff
     { MODKEY,                           XK_b,       togglebar,      {0} },
