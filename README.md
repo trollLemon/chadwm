@@ -1,3 +1,9 @@
+
+This is my custom build/fork of chadwm.
+
+
+
+Original readme:
 # chadwm (Initial look)
 
 <img src="https://github.com/siduck/chadwm/blob/screenshots/screenshots/initial_look.png">
