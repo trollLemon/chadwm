@@ -1070,17 +1070,17 @@ int drawstatusbar(Monitor *m, int bh, char *stext) {
 
   w += horizpadbar;
   if(floatbar){
-    ret = x = m->ww - m->gappov * 2 - borderpx - w;
-    x = m->ww - m->gappov * 2 - borderpx - w - getsystraywidth();
+    ret = x = m->ww - m->gappov * 2 - w;
+    x = m->ww - m->gappov * 2 - w - getsystraywidth();
   }else{
-    ret = x = m->ww -  borderpx - w;
+    ret = x = m->ww  - w;
     x = m->ww - w - getsystraywidth();
   }
 
   drw_setscheme(drw, scheme[LENGTH(colors)]);
   drw->scheme[ColFg] = scheme[SchemeNorm][ColFg];
   drw->scheme[ColBg] = scheme[SchemeNorm][ColBg];
-  drw_rect(drw, x, borderpx, w, bh, 1, 1);
+  drw_rect(drw, x, 0, w, bh, 1, 1);
   x += horizpadbar / 2;
 
   /* process status text */
@@ -1091,7 +1091,7 @@ int drawstatusbar(Monitor *m, int bh, char *stext) {
 
       text[i] = '\0';
       w = TEXTW(text) - lrpad;
-      drw_text(drw, x, borderpx + vertpadbar / 2, w, bh - vertpadbar, 0, text,
+      drw_text(drw, x, vertpadbar / 2, w, bh - vertpadbar, 0, text,
                0);
 
       x += w;
@@ -1125,7 +1125,7 @@ int drawstatusbar(Monitor *m, int bh, char *stext) {
             ;
           int rh = atoi(text + ++i);
 
-          drw_rect(drw, rx + x, ry + borderpx + vertpadbar / 2, rw, rh, 1, 0);
+          drw_rect(drw, rx + x, ry + vertpadbar / 2, rw, rh, 1, 0);
         } else if (text[i] == 'f') {
           x += atoi(text + ++i);
         }
@@ -1139,7 +1139,7 @@ int drawstatusbar(Monitor *m, int bh, char *stext) {
 
   if (!isCode) {
     w = TEXTW(text) - lrpad;
-    drw_text(drw, x, borderpx + vertpadbar / 2, w, bh - vertpadbar, 0, text, 0);
+    drw_text(drw, x, vertpadbar / 2, w, bh - vertpadbar, 0, text, 0);
   }
 
   drw_setscheme(drw, scheme[SchemeNorm]);
@@ -1447,13 +1447,15 @@ void dragmfact(const Arg *arg) {
 }
 
 void drawbar(Monitor *m) {
-  int x, y = borderpx, w, sw = 0, stw = 0;
-  int bh_n = bh - borderpx * 2;
+  int x = 0; 
+  int y = 0;
+  int w, sw = 0, stw = 0;
+  int bh_n = bh; // - borderpx * 2;
   int mw;
   if(floatbar){
-    mw = m->ww - m->gappov * 2 - borderpx * 2;
+    mw = m->ww - m->gappov * 2 ; // borderpx * 2;
   }else{
-    mw = m->ww - borderpx * 2;
+    mw = m->ww ; //- borderpx * 2;
   }
   int boxs = drw->fonts->h / 9;
   int boxw = drw->fonts->h / 6 + 2;
@@ -1484,7 +1486,7 @@ void drawbar(Monitor *m) {
     if (c->isurgent)
       urg |= c->tags;
   }
-  x = borderpx;
+  x = 0;
   for (i = 0; i < LENGTH(tags); i++) {
     w = TEXTW(tags[i]);
     drw_setscheme(drw, scheme[occ & 1 << i ? (m->colorfultag ? tagschemes[i] : SchemeSel) : SchemeTag]);
@@ -2886,7 +2888,9 @@ void setup(void) {
   if (!drw_fontset_create(drw, fonts, LENGTH(fonts)))
     die("no fonts could be loaded.");
   lrpad = drw->fonts->h;
-  bh = drw->fonts->h + 2 + vertpadbar + borderpx * 2;
+  
+  //bh = drw->fonts->h + 2 + vertpadbar + borderpx * 2;
+  bh = drw->fonts->h + 2 + vertpadbar;
   th = vertpadtab;
  // bh_n = vertpadtab;
   updategeom();
